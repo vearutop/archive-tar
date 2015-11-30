@@ -98,6 +98,7 @@ class Reader implements \Iterator {
 	}
 
 
+	/** @var bool|callable */
 	private $readContents = TRUE;
 
 	/**
@@ -118,7 +119,8 @@ class Reader implements \Iterator {
 	/**
 	 * Sets buffer size for reading file contents
 	 *
-	 * @param int
+	 * @param $buffer
+	 * @throws ReaderException
 	 */
 	public function setBuffer($buffer)
 	{
@@ -186,6 +188,7 @@ class Reader implements \Iterator {
 			}
 
 			$file['contents'] = NULL;
+			$record['contents'] = '';
 			if ($length == 0 && is_callable($this->readContents)) {
 				call_user_func($this->readContents, $record, '', 0, 0);
 			}
@@ -206,6 +209,7 @@ class Reader implements \Iterator {
 						call_user_func($this->readContents, $record, $chunk, $length, $read);
 					} else {
 						$file['contents'] .= $read;
+						$record['contents'] .= $chunk;
 					}
 				}
 			}
